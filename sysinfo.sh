@@ -1,4 +1,23 @@
 #!/bin/bash
+
+
+# ===== HELP FEATURE =====
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: ./sysinfo.sh [OPTION]"
+    echo
+    echo "A simple system information menu script."
+    echo
+    echo "Options:"
+    echo "  1  Show System Info (OS, hostname, kernel, uptime)"
+    echo "  2  Show Disk Usage (human-readable, all mounted filesystems)"
+    echo "  3  Show Current Users and their running apps"
+    echo "  4  Exit"
+    echo "  5  Show Top 5 CPU-Intensive Processes"
+    echo
+    echo "You can also run './sysinfo.sh -h' or './sysinfo.sh --help' to view this message."
+    exit 0
+fi
+
 while true; do
     clear
 # Display the title
@@ -6,14 +25,18 @@ while true; do
     echo "        Bash Menu"
     echo "==========================="
 
-    echo -e "Welcome, select one of the following options using the number keys: \n 1: Show System Info \n 2: Show Disk usage \n 3: Show Current Users \n 4: Exit"
+    echo -e "Welcome, select one of the following options using the number keys: \n 1: Show System Info \n 2: Show Disk usage \n 3: Show Current Users \n 4: Show Top 5 CPU-Intensive Processes \n 5: Exit"
 
     # taking the input and storing in "number"
     read -p "Number: " number
 
         # If function to read the options and execute them as requested
     if [ "$number" -eq 1 ]; then
+        echo "======================================="
         echo "You selected Option 1: Show System Info"
+        
+        echo "-------------------------------------"
+        echo "Generated on: $(date)"
         echo "-------------------------------------"
 
         # 1) Operating system name & version (portable)
@@ -59,7 +82,10 @@ while true; do
 
             
     elif [ "$number" -eq 2 ]; then
+        echo "====================================="
         echo "You selected Option 2: Show Disk usage"
+        echo "-------------------------------------"
+        echo "Generated on: $(date)"
         echo "-------------------------------------"
         df -h
         echo "-------------------------------------"
@@ -67,7 +93,10 @@ while true; do
             
 
     elif [ "$number" -eq 3 ]; then
+        echo "========================================================="
         echo "You selected Option 3: Show Current Users and Running Apps"
+        echo "-------------------------------------"
+        echo "Generated on: $(date)"
         echo "---------------------------------------------------------"
 
         # Show all users currently logged into the system
@@ -85,14 +114,27 @@ while true; do
             echo "---------------------------------------------------------"
         done
 
-
-            
     elif [ "$number" -eq 4 ]; then
+        echo "========================================================="
+        echo "You selected Option 4: Show Top 5 CPU-Intensive Processes"
+        echo "-------------------------------------"
+        echo "Generated on: $(date)"
+        echo "---------------------------------------------------------"
+        printf "+------+-------+--------+-------------+\n"
+        printf "| PID  | User  | CPU%%   | Command     |\n"
+        printf "+------+-------+--------+-------------+\n"
+        ps -eo pid,user,%cpu,comm --sort=-%cpu | head -n 6 | awk '{printf "| %-4s | %-5s | %-6s | %-11s |\n", $1, $2, $3, $4}'
+        printf "+------+-------+--------+-------------+\n"
+        echo "---------------------------------------------------------"
+            
+    elif [ "$number" -eq 5 ]; then
         echo "Exiting Script..."
         exit 0 # exit script with a success status
     else
-        echo "Invalid choice! Please run the script again and select 1–4."
+        echo "Invalid choice! Please run the script again and select 1–5."
     fi
+    # show when info was generated
+
 
    # Wait before showing the menu again
     echo
